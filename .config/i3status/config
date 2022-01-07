@@ -1,0 +1,43 @@
+
+general {
+        colors = true
+        interval = 5
+        markup= pango
+        color_good = "#A3BE8C"
+	color_bad = "#BF616A"
+	color_degraded = "#B48EAD"
+}
+
+order += "wireless _first_"
+order += "volume master"
+order += "battery 0"
+order += "time"
+
+wireless _first_ {
+        format_up = "%quality"
+        format_down = ""
+}
+
+battery 0 {
+        format = "%status %percentage"
+        format_down = "No battery"
+        status_chr = ""
+        status_bat = ""
+        status_unk = ""
+        status_full = ""
+        
+        path = "/sys/class/power_supply/BAT%d/uevent"
+        low_threshold = 10
+}
+
+
+
+
+time {
+        format = "%a-%b-%d %I:%M%p"
+}
+
+volume master  {
+        format = "%volume"
+        format_muted = "muted (%volume)"
+}
