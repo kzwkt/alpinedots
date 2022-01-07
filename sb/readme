@@ -1,3 +1,25 @@
 statusblock for i3blocks/dwmblocks
 
 src::https://github.com/LukeSmithxyz/voidrice/tree/master/.local/bin/statusbar
+
+
+depends 
+
+blight 
+sudo apk add brightnessctl
+
+internet
+sudo apk add sed awk grep
+
+volume
+# addgroup $USER audio
+# addgroup root audio
+# apk add alsa-utils  alsa-lib alsaconf alsa-ucm-conf
+# alsamixer
+# nano /usr/share/alsa/alsa.conf
+defaults.ctl.card 1
+defaults.pcm.card 1
+rc-service alsa start
+rc-update add alsa
+
+
