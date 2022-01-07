@@ -1,0 +1,23 @@
+#!/bin/bash
+ar=(
+ 'sudo ntfs-3g /dev/sda1 /home/kai/mnt/pho' 
+ 'sudo umount /home/kai/mnt/pho'
+ 
+ 'sudo ntfs-3g /dev/sda2 /home/kai/mnt/aps'
+ 'sudo umount /home/kai/mnt/aps' 
+ 
+ 'sudo ntfs-3g /dev/sda5 /home/kai/mnt/lib' 
+ 'sudo umount /home/kai/mnt/lib' 
+ 
+ 'sudo mount /dev/nvme0n1p2 /home/kai/mnt/arch' 
+ 'sudo umount /home/kai/mnt/arch' 
+ 
+ )
+if [ $# -eq 0 ]; then 
+echo "pho[0/1],aps[2/3],lib[4/5],arh[6,7]"
+fi
+while [ $# -gt 0 ]
+do
+exec ${ar[$1]}
+done
+
