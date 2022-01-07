@@ -1,0 +1,162 @@
+set $mod Mod4
+set $mod1 Mod1
+
+set $term st
+set $fm st -e nnn
+set $browser firefox
+set $menu dmenu_run
+set $editor geany
+
+set $WS1 1 1
+set $WS2 2 
+set $WS3 3 
+set $WS4 4 
+set $WS5 5 
+set $WS6 6 
+set $WS7 7 
+
+default_border pixel 3
+#autostart
+#exec --no-startup-id dunst
+
+#wm rules
+
+for_window [window_role=pop-up|task_dialog|About] floating enable 
+for_window [appid= mpv|imv|pavucontrol] floating enable 
+for_window [urgent=latest] focus
+for_window [class=.*] focus
+
+assign [class="Alacritty"] $WS1
+assign [class="Firefox"] $WS2
+assign [class="Pcmanfm"]  $WS3
+assign [class="Geany"] $WS4
+assign [class="mpv"]  $WS5
+
+
+
+font pango:monospace 10
+#font pango:DejaVu Sans Mono 10
+
+
+#shortcuts
+set $refresh_i3status killall -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec amixer sset Master 5%+  && pkill -RTMIN+2 i3blocks
+bindsym XF86AudioLowerVolume exec amixer sset Master 5%- && pkill -RTMIN+2 i3blocks
+bindsym XF86AudioMute exec amixer sset Master toggle && pkill -RTMIN+2 i3blocks
+
+bindsym Control+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym Control+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +5%
+bindsym Control+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -5%
+
+bindsym XF86MonBrightnessUp exec brightnessctl  s 2%+   && pkill -RTMIN+3 i3blocks
+bindsym XF86MonBrightnessDown exec brightnessctl  s 2%-  && pkill -RTMIN+3 i3blocks
+bindsym Control+XF86MonBrightnessUp exec brightnessctl  s 10%+  && pkill -RTMIN+3 i3blocks
+bindsym Control+XF86MonBrightnessDown exec brightnessctl  s 10%-   && pkill -RTMIN+3 i3blocks
+
+bindsym $mod+e exec $fm
+bindsym $mod1+Tab workspace next
+
+bindsym $mod+p exec --no-startup-id ~/.config/rofi/bin/menu_powermenu
+bindsym $mod+m exec --no-startup-id ~/.scripts/dmenumount
+bindsym $mod+Shift+m exec --no-startup-id ~/.scripts/dmenuumount
+
+bindsym $mod+slash exec "rofimoji --action type "
+
+
+bindsym $mod+w exec $browser
+bindsym $mod+Return exec st
+bindsym $mod+d exec --no-startup-id $menu
+bindsym Print exec ~/.local/bin/screenshot
+
+bindsym $mod+i exec $editor ~/.config/i3/config
+bindsym $mod+Shift+i exec $editor ~/.config/i3blocks/config
+
+bindsym $mod+q kill
+bindsym $mod+Shift+c reload
+floating_modifier $mod
+
+#workspaces
+bindsym $mod+1 workspace $WS1
+bindsym $mod+2 workspace $WS2
+bindsym $mod+3 workspace $WS3
+bindsym $mod+4 workspace $WS4
+bindsym $mod+5 workspace $WS5
+bindsym $mod+6 workspace $WS6
+bindsym $mod+7 workspace $WS7
+   
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $WS1
+bindsym $mod+Shift+2 move container to workspace $WS2
+bindsym $mod+Shift+3 move container to workspace $WS3
+bindsym $mod+Shift+4 move container to workspace $WS4
+bindsym $mod+Shift+5 move container to workspace $WS5
+bindsym $mod+Shift+6 move container to workspace $WS6
+bindsym $mod+Shift+7 move container to workspace $WS7
+
+
+# change focus
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
+bindsym $mod+semicolon focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+semicolon move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split v
+bindsym $mod+f fullscreen toggle
+
+bindsym $mod1+s layout stacking
+bindsym $mod1+w layout tabbed
+bindsym $mod1+e layout toggle split
+
+bindsym $mod+Shift+space floating toggle
+bindsym $mod+space focus mode_toggle
+bindsym $mod+a focus parent
+#bindsym $mod+d focus child
+bindsym $mod+Shift+r restart
+
+bindsym $mod1+Left resize shrink width 10px
+bindsym $mod1+Down resize grow height 10px
+bindsym $mod1+Up resize shrink height 10px
+bindsym $mod1+Right resize grow width 10px
+
+bindsym $mod+Escape exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -B 'Yes, exit i3' 'i3-msg exit'"
+
+bar {
+       status_command i3blocks
+            position top
+            font pango:monospace 12
+
+            
+
+}
+
+## Window decoration
+# class                 border  backgr. text    indicator child_border
+
+client.focused          #88c0d0 #434c5e #eceff4 #8fbcbb   #88c0d0
+client.focused_inactive #88c0d0 #2e3440 #d8dee9 #4c566a   #4c566a
+client.unfocused        #88c0d0 #2e3440 #d8dee9 #4c566a   #4c566a
+client.urgent           #ebcb8b #ebcb8b #2e3440 #8fbcbb   #ebcb8b
+
+
