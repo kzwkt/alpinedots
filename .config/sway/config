@@ -1,0 +1,246 @@
+set $mod1 Mod1
+set $mod Mod4
+
+set $left h
+set $down j
+set $up k
+set $right l
+
+
+set $term foot
+set $fm pcmanfm
+set $browser firefox
+set $editor geany
+set $menu wofi --show drun -I
+
+set $refresh_i3status killall -SIGUSR1 i3status
+
+
+#autostart
+#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+exec mako
+
+
+xwayland disable
+gaps inner 5
+gaps outer 5
+default_border pixel 4
+
+#program shortcuts
+bindsym $mod+d exec $menu
+bindsym $mod+e exec $fm
+bindsym $mod+w exec $browser
+bindsym $mod+Return exec $term
+bindsym $mod+i exec $editor ~/.config/sway/config
+bindsym $mod+Shift+i exec $editor ~/.config/i3status/config
+bindsym Print exec ~/.scripts/screenshot
+bindsym $mod+p exec ~/.scripts/windows.py
+bindsym $mod+m exec --no-startup-id ~/.scripts/dmenumount
+bindsym $mod+Shift+m exec --no-startup-id ~/.scripts/dmenuumount
+
+
+bindsym XF86AudioRaiseVolume exec amixer sset Master 5%+  &&   $refresh_i3status
+bindsym XF86AudioLowerVolume exec amixer sset Master 5%- &&  $refresh_i3status
+bindsym XF86AudioMute exec amixer sset Master toggle &&  $refresh_i3status
+
+bindsym Control+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+bindsym Control+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +5%
+bindsym Control+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -5%
+
+bindsym XF86MonBrightnessUp exec brightnessctl  s 2%+   && pkill -RTMIN+3 i3blocks
+bindsym XF86MonBrightnessDown exec brightnessctl  s 2%-  && pkill -RTMIN+3 i3blocks
+bindsym Control+XF86MonBrightnessUp exec brightnessctl  s 10%+  && pkill -RTMIN+3 i3blocks
+bindsym Control+XF86MonBrightnessDown exec brightnessctl  s 10%-   && pkill -RTMIN+3 i3blocks
+
+
+
+
+#workspaces
+bindsym $mod+1 workspace $WS1
+bindsym $mod+2 workspace $WS2
+bindsym $mod+3 workspace $WS3
+bindsym $mod+4 workspace $WS4
+bindsym $mod+5 workspace $WS5
+bindsym $mod+6 workspace $WS6
+bindsym $mod+7 workspace $WS7
+   
+# Move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace $WS1
+bindsym $mod+Shift+2 move container to workspace $WS2
+bindsym $mod+Shift+3 move container to workspace $WS3
+bindsym $mod+Shift+4 move container to workspace $WS4
+bindsym $mod+Shift+5 move container to workspace $WS5
+bindsym $mod+Shift+6 move container to workspace $WS6
+bindsym $mod+Shift+7 move container to workspace $WS7
+
+set $WS1 1 
+set $WS2 2 
+set $WS3 3 
+set $WS4 4 
+set $WS5 5 
+set $WS6 6 
+set $WS7 7 
+
+#wm rules
+for_window [window_role=pop-up|task_dialog|About] floating enable 
+for_window [app_id= mpv|imv|pavucontrol] floating enable 
+for_window [urgent=latest] focus
+for_window [app_id=.*] focus
+
+assign [app_id="alacritty"] $WS1
+assign [app_id="firefox"] $WS2
+assign [app_id="pcmanfm"]  $WS3
+assign [app_id="geany"] $WS4
+assign [app_id="mpv"]  $WS5
+assign [app_id=zathura|gimp] $WS6
+
+
+
+bindsym $mod1+Left resize shrink width 10px
+bindsym $mod1+Down resize grow height 10px
+bindsym $mod1+Up resize shrink height 10px
+bindsym $mod1+Right resize grow width 10px
+
+bindsym $mod1+Tab workspace next
+bindsym $mod+q kill
+bindsym $mod+Shift+r reload
+floating_modifier $mod normal
+bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+
+
+output * bg /home/kai/Pictures/wal/alpine.jpg fill
+
+
+input type:touchpad {
+    tap enabled
+    dwt enabled
+    middle_emulation enabled
+    natural_scroll enabled
+}
+
+   input * {
+    xkb_layout "us,np"
+    xkb_options "grp:shifts_toggle"
+}
+
+output eDP-1 {
+    scale 1
+}
+
+# swaymsg -t get_inputs
+
+
+# Moving around:
+#
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    
+    # Ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+
+#
+# Layout stuff:
+#
+	bindsym $mod+y layout stacking
+    bindsym $mod+t layout tabbed
+    bindsym $mod+u layout toggle split
+
+	bindsym $mod+b splith
+    bindsym $mod+v splitv
+    bindsym $mod+f fullscreen
+    bindsym $mod+Shift+space floating toggle
+    bindsym $mod+space focus mode_toggle
+    bindsym $mod+a focus parent
+    
+  bindsym $mod+Shift+minus move scratchpad
+  bindsym $mod+minus scratchpad show
+  
+  
+set $mode_gaps Gaps: (o) outer, (i) inner
+set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
+set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
+bindsym $mod+Shift+g mode "$mode_gaps"
+
+mode "$mode_gaps" {
+        bindsym o      mode "$mode_gaps_outer"
+        bindsym i      mode "$mode_gaps_inner"
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+mode "$mode_gaps_inner" {
+        bindsym plus  gaps inner current plus 5
+        bindsym minus gaps inner current minus 5
+        bindsym 0     gaps inner current set 0
+
+        bindsym Shift+plus  gaps inner all plus 5
+        bindsym Shift+minus gaps inner all minus 5
+        bindsym Shift+0     gaps inner all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+mode "$mode_gaps_outer" {
+        bindsym plus  gaps outer current plus 5
+        bindsym minus gaps outer current minus 5
+        bindsym 0     gaps outer current set 0
+
+        bindsym Shift+plus  gaps outer all plus 5
+        bindsym Shift+minus gaps outer all minus 5
+        bindsym Shift+0     gaps outer all set 0
+
+        bindsym Return mode "default"
+        bindsym Escape mode "default"
+}
+
+  
+
+set $base01 #1f222d
+set $base02 #252936
+set $base03 #5e81ac  
+set $base08 #ee829f
+
+
+
+bar {
+      position top
+   # swaybar_command waybar
+    status_command i3status
+     colors {
+        #                   border  background text
+            focused_workspace  $base01 $base01    #81a1c1 
+            active_workspace   $base01 $base02    $base03
+            inactive_workspace $base01 $base01    #4c566a
+            urgent_workspace   $base01 $base01    $base08
+            binding_mode       $base01 #81a1c1    #2e3440    }
+}
+
+     # Window color settings
+    # class                 border  backgr. text    indicator
+    client.focused          #81a1c1 #81a1c1 #ffffff #81a1c1
+    client.unfocused        #2e3440 #2e3440 #888888 #2e3440
+    client.focused_inactive #2e3440 #2e3440 #888888 #2e3440
+    client.placeholder      #2e3440 #2e3440 #888888 #2e3440
+    client.urgent           #900000 #900000 #ffffff #900000
+
+    client.background       #242424
+
+
+include /etc/sway/config.d/*
