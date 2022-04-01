@@ -1,59 +1,148 @@
-set $mod1 Mod1
 set $mod Mod4
+set $mod1 Mod1
 
 set $left h
 set $down j
 set $up k
 set $right l
 
-
 set $term foot
 set $fm pcmanfm
-set $browser firefox
-set $editor geany
-set $menu wofi --show drun -I
+set $browser ~/.local/bin/firefox
+set $menu rofi -show drun -show-icons
 
-set $refresh_i3status killall -SIGUSR1 i3status
-
-
-#autostart
-#exec /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
-exec mako
+set $refresh_vol pkill -RTMIN+1 i3blocks
+set $refresh_mic pkill -RTMIN+2 i3blocks
+set $refresh_bri pkill -RTMIN+3 i3blocks
+set $refresh_shi pkill -RTMIN+6 i3blocks
+set $refresh_keyind pkill -RTMIN+3 i3blocks 
 
 
+set $WS1 1  Term
+set $WS2 2  Web
+set $WS3 3  File
+set $WS4 4  Code
+set $WS5 5  Media
+set $WS6 6  Graphics
+set $WS7 7   Other
+
+
+#wm rules
+for_window [window_role=pop-up|task_dialog|About|bubble|Preferences] floating enable
+#for_window [window_type=dialog|menu] floating enable 
+for_window [app_id= mpv|imv|pavucontrol] floating enable 
+for_window [urgent=latest] focus
+for_window [title = "Picture-in-Picture"] sticky enable ; floating enable;
+for_window [app_id=.*] focus
+
+assign [app_id="foot"] $WS1
+assign [app_id="firefox"] $WS2
+assign [app_id="pcmanfm"]  $WS3
+assign [app_id="geany"] $WS4
+assign [app_id="mpv"]  $WS5
+assign [app_id=zathura|gimp] $WS6
+
+
+workspace_auto_back_and_forth yes 
+default_border pixel 6
 xwayland disable
-gaps inner 5
-gaps outer 5
-default_border pixel 4
+floating_modifier $mod normal
 
-#program shortcuts
-bindsym $mod+d exec $menu
-bindsym $mod+e exec $fm
-bindsym $mod+w exec $browser
-bindsym $mod+Return exec $term
-bindsym $mod+i exec $editor ~/.config/sway/config
-bindsym $mod+Shift+i exec $editor ~/.config/i3status/config
-bindsym Print exec ~/.scripts/screenshot
-bindsym $mod+p exec ~/.scripts/windows.py
-bindsym $mod+m exec --no-startup-id ~/.scripts/dmenumount
-bindsym $mod+Shift+m exec --no-startup-id ~/.scripts/dmenuumount
+set $mount exec doas /bin/ntfs-3g
+set $umount exec doas /bin/umount
 
+set $mode_fs_mount  FS mount: l (Library), r (realme phone)
+set $mode_fs_umount  FS umount: l (Library), r (realme phone)
 
-bindsym XF86AudioRaiseVolume exec amixer sset Master 5%+  &&   $refresh_i3status
-bindsym XF86AudioLowerVolume exec amixer sset Master 5%- &&  $refresh_i3status
-bindsym XF86AudioMute exec amixer sset Master toggle &&  $refresh_i3status
+mode "$mode_fs_mount" {
+bindsym l       $mount /dev/sda1 ~/mnt/lib,       mode "default"
+bindsym r     exec simple-mtpfs --device 1 ~/mnt/oppo,       mode "default"
+bindsym Escape                         mode "default"
+}
 
-bindsym Control+XF86AudioMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
-bindsym Control+XF86AudioRaiseVolume exec pactl set-source-volume @DEFAULT_SOURCE@ +5%
-bindsym Control+XF86AudioLowerVolume exec pactl set-source-volume @DEFAULT_SOURCE@ -5%
-
-bindsym XF86MonBrightnessUp exec brightnessctl  s 2%+   && pkill -RTMIN+3 i3blocks
-bindsym XF86MonBrightnessDown exec brightnessctl  s 2%-  && pkill -RTMIN+3 i3blocks
-bindsym Control+XF86MonBrightnessUp exec brightnessctl  s 10%+  && pkill -RTMIN+3 i3blocks
-bindsym Control+XF86MonBrightnessDown exec brightnessctl  s 10%-   && pkill -RTMIN+3 i3blocks
+mode "$mode_fs_umount" {
+bindsym l       $umount  ~/mnt/lib,     mode "default"
+bindsym r       $umount  ~/mnt/oppo,  mode "default"
+bindsym Escape                         mode "default"
+}
 
 
+set $mode_system System: (l) lock, (e) exit, (s) suspend, (h) hibernate, (r) reboot, (o) power-off
 
+mode "$mode_system" {
+bindsym l exec swaylock, mode "default"
+bindsym e exit
+bindsym s exec swaylock && systemctl suspend, mode "default"
+bindsym h exec swaylock && systemctl hibernate, mode "default"
+bindsym r exec doas /sbin/reboot
+bindsym o exec doas /sbin/poweroff
+bindsym Escape mode "default"
+}
+
+
+output eDP-1 {
+ bg  #000000 solid_color
+}
+
+
+
+exec swayidle -w \
+timeout 500 'swaymsg "output * dpms off"'  \
+resume 'swaymsg "output * dpms on"' \
+
+
+exec mako
+for_window [shell=".*"] inhibit_idle fullscreen
+
+input "1739:52694:DELL0A2B:00_06CB:CDD6_Touchpad" {
+     dwt enabled
+       tap enabled
+       middle_emulation enabled
+       pointer_accel 1
+   }
+
+
+input "1:1:AT_Translated_Set_2_keyboard" {
+	xkb_layout "us,np"
+	xkb_options "grp:shifts_toggle"
+	xkb_numlock enable
+}
+seat seat0 hide_cursor 10000
+
+### Key bindings
+bindsym $mod1+Left resize shrink width 10px
+bindsym $mod1+Down resize grow height 10px
+bindsym $mod1+Up resize shrink height 10px
+bindsym $mod1+Right resize grow width 10px
+
+bindsym $mod1+Tab workspace next 
+bindsym $mod+slash exec ~/opt/bin/wmoji type
+
+bindsym XF86AudioPlay  exec echo cycle pause   | socat - /tmp/mpvsocket
+bindsym $mod1+period  exec echo playlist_next | socat - /tmp/mpvsocket
+bindsym $mod1+comma  exec echo playlist_prev | socat - /tmp/mpvsocket
+
+bindsym XF86AudioRaiseVolume exec amixer sset Master 5%+ && $refresh_vol
+bindsym XF86AudioLowerVolume exec amixer sset Master 5%- && $refresh_vol
+bindsym XF86AudioMute exec amixer sset Master toggle  && $refresh_vol
+
+bindsym Control+XF86AudioMute exec amixer -q sset Capture toggle && $refresh_mic
+bindsym Control+XF86AudioRaiseVolume exec amixer -q sset Capture 5%+ && $refresh_mic
+bindsym Control+XF86AudioLowerVolume exec amixer -q sset Capture 5%- && $refresh_mic
+
+
+bindsym XF86MonBrightnessUp exec brightnessctl  s 2%+  && $refresh_bri
+bindsym XF86MonBrightnessDown exec brightnessctl  s 2%-  && $refresh_bri 
+bindsym Control+XF86MonBrightnessUp exec brightnessctl  s 10%+   && $refresh_bri
+bindsym Control+XF86MonBrightnessDown exec brightnessctl  s 10%-   && $refresh_bri
+
+bindsym --release Caps_Lock exec $refresh_keyind
+bindsym --release Num_Lock  exec $refresh_keyind
+bindsym --release Shift_R exec $refresh_shi
+
+bindsym $mod+Escape mode "$mode_system"
+
+bindsym  --locked   $mod+F9 exec toglcd
 
 #workspaces
 bindsym $mod+1 workspace $WS1
@@ -73,174 +162,64 @@ bindsym $mod+Shift+5 move container to workspace $WS5
 bindsym $mod+Shift+6 move container to workspace $WS6
 bindsym $mod+Shift+7 move container to workspace $WS7
 
-set $WS1 1 
-set $WS2 2 
-set $WS3 3 
-set $WS4 4 
-set $WS5 5 
-set $WS6 6 
-set $WS7 7 
+bindsym $mod+Shift+minus move scratchpad
+bindsym $mod+minus scratchpad show
 
-#wm rules
-for_window [window_role=pop-up|task_dialog|About] floating enable 
-for_window [app_id= mpv|imv|pavucontrol] floating enable 
-for_window [urgent=latest] focus
-for_window [app_id=.*] focus
-
-assign [app_id="alacritty"] $WS1
-assign [app_id="firefox"] $WS2
-assign [app_id="pcmanfm"]  $WS3
-assign [app_id="geany"] $WS4
-assign [app_id="mpv"]  $WS5
-assign [app_id=zathura|gimp] $WS6
-
-
-
-bindsym $mod1+Left resize shrink width 10px
-bindsym $mod1+Down resize grow height 10px
-bindsym $mod1+Up resize shrink height 10px
-bindsym $mod1+Right resize grow width 10px
-
-bindsym $mod1+Tab workspace next
 bindsym $mod+q kill
+bindsym $mod+w exec $browser  
+bindsym $mod+e exec $fm
+bindsym $mod+Shift+e exec swaynag  -m 'rip sway?' -b 'Yes,bye' 'swaymsg exit'
 bindsym $mod+Shift+r reload
-floating_modifier $mod normal
-bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+bindsym $mod+i exec iwgtk
+
+bindsym $mod+a focus parent
+bindsym $mod+d exec $menu
+bindsym $mod+f fullscreen
+bindsym $mod+Return exec  $term
+
+bindsym $mod+c exec foot -e nano ~/.config/sway/config
+bindsym $mod+v splitv
+bindsym $mod+b splith
+bindsym $mod+shift+c exec foot -e nano ~/.config/sway/status.sh
+bindsym $mod+m       mode "$mode_fs_mount"
+bindsym $mod+Shift+m mode "$mode_fs_umount"
 
 
-output * bg /home/kai/Pictures/wal/alpine.jpg fill
+bindsym $mod+space focus mode_toggle
+bindsym $mod+Shift+space floating toggle
+
+bindsym $mod1+$left focus left
+bindsym $mod1+$down focus down
+bindsym $mod1+$up focus up
+bindsym $mod1+$right focus right
 
 
-input type:touchpad {
-    tap enabled
-    dwt enabled
-    middle_emulation enabled
-    natural_scroll enabled
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod1+s layout stacking
+bindsym $mod1+w layout tabbed
+bindsym $mod1+e layout toggle split
+
+bar
+ {
+position top
+#status_command while ~/.config/sway/status.sh; do sleep 1; done 
+status_command i3blocks
 }
-
-   input * {
-    xkb_layout "us,np"
-    xkb_options "grp:shifts_toggle"
-}
-
-output eDP-1 {
-    scale 1
-}
-
-# swaymsg -t get_inputs
-
-
-# Moving around:
-#
-    # Move your focus around
-    bindsym $mod+$left focus left
-    bindsym $mod+$down focus down
-    bindsym $mod+$up focus up
-    bindsym $mod+$right focus right
-    # Or use $mod+[up|down|left|right]
-    bindsym $mod+Left focus left
-    bindsym $mod+Down focus down
-    bindsym $mod+Up focus up
-    bindsym $mod+Right focus right
-
-    # Move the focused window with the same, but add Shift
-    bindsym $mod+Shift+$left move left
-    bindsym $mod+Shift+$down move down
-    bindsym $mod+Shift+$up move up
-    bindsym $mod+Shift+$right move right
-    
-    # Ditto, with arrow keys
-    bindsym $mod+Shift+Left move left
-    bindsym $mod+Shift+Down move down
-    bindsym $mod+Shift+Up move up
-    bindsym $mod+Shift+Right move right
-
-#
-# Layout stuff:
-#
-	bindsym $mod+y layout stacking
-    bindsym $mod+t layout tabbed
-    bindsym $mod+u layout toggle split
-
-	bindsym $mod+b splith
-    bindsym $mod+v splitv
-    bindsym $mod+f fullscreen
-    bindsym $mod+Shift+space floating toggle
-    bindsym $mod+space focus mode_toggle
-    bindsym $mod+a focus parent
-    
-  bindsym $mod+Shift+minus move scratchpad
-  bindsym $mod+minus scratchpad show
-  
-  
-set $mode_gaps Gaps: (o) outer, (i) inner
-set $mode_gaps_outer Outer Gaps: +|-|0 (local), Shift + +|-|0 (global)
-set $mode_gaps_inner Inner Gaps: +|-|0 (local), Shift + +|-|0 (global)
-bindsym $mod+Shift+g mode "$mode_gaps"
-
-mode "$mode_gaps" {
-        bindsym o      mode "$mode_gaps_outer"
-        bindsym i      mode "$mode_gaps_inner"
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
-
-mode "$mode_gaps_inner" {
-        bindsym plus  gaps inner current plus 5
-        bindsym minus gaps inner current minus 5
-        bindsym 0     gaps inner current set 0
-
-        bindsym Shift+plus  gaps inner all plus 5
-        bindsym Shift+minus gaps inner all minus 5
-        bindsym Shift+0     gaps inner all set 0
-
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
-mode "$mode_gaps_outer" {
-        bindsym plus  gaps outer current plus 5
-        bindsym minus gaps outer current minus 5
-        bindsym 0     gaps outer current set 0
-
-        bindsym Shift+plus  gaps outer all plus 5
-        bindsym Shift+minus gaps outer all minus 5
-        bindsym Shift+0     gaps outer all set 0
-
-        bindsym Return mode "default"
-        bindsym Escape mode "default"
-}
-
-  
-
-set $base01 #1f222d
-set $base02 #252936
-set $base03 #5e81ac  
-set $base08 #ee829f
-
-
-
-bar {
-      position top
-   # swaybar_command waybar
-    status_command i3status
-     colors {
-        #                   border  background text
-            focused_workspace  $base01 $base01    #81a1c1 
-            active_workspace   $base01 $base02    $base03
-            inactive_workspace $base01 $base01    #4c566a
-            urgent_workspace   $base01 $base01    $base08
-            binding_mode       $base01 #81a1c1    #2e3440    }
-}
-
-     # Window color settings
-    # class                 border  backgr. text    indicator
-    client.focused          #81a1c1 #81a1c1 #ffffff #81a1c1
-    client.unfocused        #2e3440 #2e3440 #888888 #2e3440
-    client.focused_inactive #2e3440 #2e3440 #888888 #2e3440
-    client.placeholder      #2e3440 #2e3440 #888888 #2e3440
-    client.urgent           #900000 #900000 #ffffff #900000
-
-    client.background       #242424
-
 
 include /etc/sway/config.d/*
