@@ -1,0 +1,16 @@
+[Added Associations]
+application/pdf=zathura.desktop;
+audio/mpeg=mpv.desktop;
+audio/x-vorbis+ogg=mpv.desktop;
+image/jpeg=imv.desktop;
+video/mp4=mpv.desktop;
+video/x-matroska=mpv.desktop;
+
+[Default Applications]
+application/pdf=zathura.desktop;
+audio/mpeg=mpv.desktop;
+audio/x-vorbis+ogg=mpv.desktop;
+image/jpeg=imv.desktop;
+image/webp=imv.desktop
+video/mp4=mpv.desktop;
+x-scheme-handler/https=firefox.desktop;
