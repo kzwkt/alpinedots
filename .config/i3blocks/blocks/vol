@@ -1,0 +1,28 @@
+#!/bin/sh
+case $BLOCK_BUTTON in
+	1) setsid -f st -e alsamixer ;;
+	 2) amixer sset Master toggle  >>/dev/null ;;
+	 4) amixer sset Master 5%+ >>/dev/null ;;
+	 5) amixer sset Master 5%- >>/dev/null ;;
+	 esac
+volstat="$(amixer get Master)"
+ 
+vol=$(echo "$volstat" | grep -o "\[[0-9]\+%\]" | sed "s/[^0-9]*//g;1q")
+echo "$volstat" | grep "\[off\]" >/dev/null && printf "off\\n" && exit
+
+if [ "$vol" -gt "70" ]; then
+	icon=""
+
+elif [ "$vol" -gt "30" ]; then
+	icon=""
+
+elif [ "$vol" -gt "0" ]; then
+	icon=""
+
+else
+       printf ""  
+fi
+
+echo "$icon$vol"
+
+	 
