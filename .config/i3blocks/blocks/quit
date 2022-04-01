@@ -1,0 +1,6 @@
+#!/bin/sh
+case $BLOCK_BUTTON in
+        1) swaymsg kill >> /dev/null ;;
+         esac
+
+echo " "
