@@ -1,0 +1,42 @@
+#!/bin/sh
+
+case $BLOCK_BUTTON in
+    1) notify-send.sh "$(acpi)";;
+    6) "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+
+for battery in /sys/class/power_supply/BAT?*; do
+	# If non-first battery, print a space separator.
+	[ -n "${capacity+x}" ] && printf " "
+	# Sets up the status and capacity
+	case "$(cat "$battery/status" 2>&1)" in
+		"Full") status=" " ;;
+		"Discharging") status="" ;;
+		"Charging") status="🔌" ;;
+		"Not charging") status="🛑" ;;
+		"Unknown") status="♻️" ;;
+		*) exit 1 ;;
+	esac
+	capacity="$(cat "$battery/capacity" 2>&1)"
+	# Will make a warn variable if discharging and low
+
+[ "$status" = "" ] && [ "$capacity" -le 25 ] && warn="❗"    
+    
+if [ "$capacity" -gt "95" ] && [ "$status" = "" ] ; then
+    status=""
+elif [ "$capacity" -gt "75" ] && [ "$status" = "" ]; then
+    status=""
+elif [ "$capacity" -gt "50" ] && [ "$status" = "" ]; then
+    status=""
+elif [ "$capacity" -gt "25" ] && [ "$status" = "" ] ; then
+    status=""
+elif [ "$capacity" -gt "10" ] && [ "$status" = "" ]; then
+    status=""
+fi
+    
+
+	# Prints the info
+	printf "%s%s%d" "$status" "$warn" "$capacity"; unset warn
+        printf "\n "
+done 
