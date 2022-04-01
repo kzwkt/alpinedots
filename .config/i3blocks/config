@@ -1,42 +1,61 @@
-command=/home/kai/.scripts/$BLOCK_NAME
-separator_block_width=10
-markup=pango
+command=/home/kai/.config/i3blocks/blocks/$BLOCK_NAME
 
-[blight]
-signal=3
-interval=1
 
-[sb-internet]
-signal=4
-interval=15
-
-[record]
-command=cat /tmp/recordingicon
+[keys]
+label=
+instance=caps
 interval=once
-signal=9
+signal=5
 
-[brightness]
-label=bri
-command=light | cut -d '.' -f 1  
+[keys]
+label=
+instance=num
 interval=once
-signal=1
+signal=5
+
+[kb]
+interval=once
+signal=6 
+
+[cam]
+label=
+instance=/dev/video0
+interval=5
 
 
-[sb-clock]
+[net]
+interval=10
+
+[ssid]
+label=
 interval=60
 
 
-[sb-volume]
-signal=2
+[webcam]
+label=
+instance=/dev/video0
+interval=5
+
+[bri]
 interval=once
+signal=3
 
+[mic]
+label=
+interval=once
+signal=2
 
-[sb-battery]
-interval=10
+[vol]
+interval=once
+signal=1
 
+[bat]
+interval=1
 
+[clock]
+interval=1
 
-
-
-
+[user]
+label=
+interval=once
 
