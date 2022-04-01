@@ -1,0 +1,15 @@
+    exec bwrap \
+     --ro-bind /usr/bin/zathura /usr/bin/zathura \
+     --ro-bind /usr/share /usr/share \
+     --ro-bind /usr/lib /usr/lib \
+     --ro-bind /lib /lib \
+     --proc /proc \
+     --ro-bind /tmp /tmp \
+     --ro-bind /home/kai /home/kai  \
+     --bind ~/.local/share/zathura ~/.local/share/zathura \
+     --ro-bind /etc/fonts /etc/fonts \
+     --chdir ~/ \
+     --unsetenv DBUS_SESSION_BUS_ADDRESS \
+     --unshare-all \
+     --new-session \
+     /usr/bin/zathura "$@"
