@@ -1,4 +1,6 @@
 #!/bin/sh
-clock=$(date '+%I')
-icon=""
-date "+ %a %d %b $icon%I:%M:%S %p"
+sclock=$(date '+%I')
+case $BLOCK_BUTTON in
+	6) foot -e "$EDITOR" "$0" ;;
+esac
+date "+%y %b %d (%a) %I:%M%p"
