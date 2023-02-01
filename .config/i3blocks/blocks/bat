@@ -1,16 +1,6 @@
 #!/bin/sh
 
-# Prints all batteries, their percentage remaining and an emoji corresponding
-# to charge status (🔌 for plugged up, 🔋 for discharging on battery, etc.).
-
 case $BLOCK_BUTTON in
-	3) notify-send "🔋 Battery module" "🔋: discharging
-🛑: not charging
-♻: stagnant charge
-🔌: charging
-⚡: charged
-❗: battery very low!
-- Scroll to change adjust xbacklight." ;;
 	4) doas light -A 2 >> /dev/null ;;
 	5) doas light -U 2 >> /dev/null ;;
 	6) foot -e "$EDITOR" "$0" ;;
@@ -39,12 +29,5 @@ fi
 # Prints the info
 printf "%s%s%d%%" "$status "  "$warn" "$capacity" ; unset warn
 printf "\\n"
- 
-
- 
-
-[battery]
-interval=1
- 
 
  
