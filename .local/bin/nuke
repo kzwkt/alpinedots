@@ -6,7 +6,6 @@ set -euf -o noclobber -o noglob -o nounset
 IFS="$(printf '%b_' '\n')"; IFS="${IFS%_}" # protect trailing \n
 
 PATH=$PATH:"${XDG_CONFIG_HOME:-$HOME/.config}/nnn/plugins"
-IMAGE_CACHE_PATH="$(dirname "$1")"/.thumbs
 
 FPATH="$1"
 FNAME=$(basename "$1")
@@ -34,32 +33,6 @@ handle_av() {
 
 # handle this extension and exit
 handle_extension() {
-    case "${ext}" in
-        ## Archive
-        a|ace|alz|arc|arj|bz|bz2|cab|cpio|deb|gz|jar|lha|lz|lzh|lzma|lzo|\
-        rpm|rz|t7z|tar|tbz|tbz2|tgz|tlz|txz|tZ|tzo|war|xpi|xz|Z|zip)
-            if type atool >/dev/null 2>&1; then
-                atool --list -- "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type bsdtar >/dev/null 2>&1; then
-                bsdtar --list --file "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            exit 1;;
-        rar)
-            if type unrar >/dev/null 2>&1; then
-                ## Avoid password prompt by providing empty password
-                unrar lt -p- -- "${FPATH}" | eval "$PAGER"
-            fi
-            exit 1;;
-        7z)
-            if type 7z >/dev/null 2>&1; then
-                ## Avoid password prompt by providing empty password
-                7z l -p -- "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            exit 1;;
-
         ## PDF
         pdf)
             handle_pdf
@@ -74,22 +47,6 @@ handle_extension() {
         avi|mkv|mp4|ts)
             handle_av
             exit 1;;
-
-        ## Log files
-        log)
-            "$EDITOR" "${FPATH}"
-            exit 0;;
-
-        ## JSON
-        json)
-            if type jq >/dev/null 2>&1; then
-                jq --color-output . "${FPATH}" | eval "$PAGER"
-                exit 0
-            elif type python >/dev/null 2>&1; then
-                python -m json.tool -- "${FPATH}" | eval "$PAGER"
-                exit 0
-            fi
-            ;;
     esac
 }
 
@@ -127,8 +84,6 @@ load_dir() {
 }
 
 handle_multimedia() {
-    # local DEFAULT_SIZE="1920x1080"
-
     mimetype="${1}"
     case "${mimetype}" in
         ## Image
@@ -178,49 +133,9 @@ handle_fallback() {
     exit 1
 }
 
-handle_blocked() {
-    case "${MIMETYPE}" in
-        application/x-sharedlib)
-            exit 0;;
-
-        application/x-shared-library-la)
-            exit 0;;
-
-        application/x-executable)
-            exit 0;;
-
-        application/x-shellscript)
-            exit 0;;
-
-        application/octet-stream)
-            exit 0;;
-    esac
-}
-
-handle_bin() {
-    case "${MIMETYPE}" in
-        application/x-executable|application/x-shellscript)
-        clear
-        echo '-------- Executable File --------' && file --dereference --brief -- "${FPATH}"
-        printf "Run executable (y/N/'a'rgs)? "
-        read -r answer
-        case "$answer" in
-            [Yy]* ) exec "${FPATH}";;
-            [Aa]* )
-                printf "args: "
-                read -r args
-                exec "${FPATH}" "$args";;
-            [Nn]* ) exit;;
-        esac
-    esac
-}
-
 MIMETYPE="$( file -bL --mime-type -- "${FPATH}" )"
-handle_extension
 handle_multimedia "${MIMETYPE}"
-handle_mime "${MIMETYPE}"
-[ "$BIN" -ne 0 ] && [ -x "${FPATH}" ] && handle_bin
-handle_blocked "${MIMETYPE}"
+handle_extension
 handle_fallback
 
 exit 1
