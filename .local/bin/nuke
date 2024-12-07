@@ -17,40 +17,39 @@ if [ -n "$ext" ]; then
 fi
 
 handle_pdf() {
-        if type zathura >/dev/null 2>&1; then
-             zathura "${FPATH}" >/dev/null 2>&1
-            return
-        fi
+    if type zathura >/dev/null 2>&1; then
+        zathura "${FPATH}" >/dev/null 2>&1
+        return
+    fi
     exit 0
 }
 
 handle_av() {
-        if type mpv >/dev/null 2>&1; then
-            mpv --player-operation-mode=pseudo-gui  "${FPATH}" >/dev/null 2>&1 &
-        fi
+    if type mpv >/dev/null 2>&1; then
+        mpv --player-operation-mode=pseudo-gui "${FPATH}" >/dev/null 2>&1 &
+    fi
     exit 0
 }
 
-# handle this extension and exit
 handle_extension() {
+    case "$ext" in
         ## PDF
         pdf)
             handle_pdf
-            exit 1;;
+            return;;
 
         ## Audio
         aac|flac|m4a|mid|midi|mpa|mp2|mp3|ogg|wav|wma)
             handle_av
-            exit 1;;
+            return;;
 
         ## Video
         avi|mkv|mp4|ts)
             handle_av
-            exit 1;;
+            return;;
     esac
 }
 
-# sets the variable abs_target, this should be faster than calling printf
 abspath() {
     case "$1" in
         /*) abs_target="$1";;
@@ -58,56 +57,31 @@ abspath() {
     esac
 }
 
-# storing the result to a tmp file is faster than calling listimages twice
-listimages() {
-    find -L "///${1%/*}" -maxdepth 1 -type f -print0 |
-        grep -izZE '\.(jpe?g|png|gif|webp|tiff|bmp|ico|svg)$' |
-        sort -z | tee "$tmp"
-}
-
-load_dir() {
-    abspath "$2"
-    tmp="${TMPDIR:-/tmp}/nuke_$$"
-    trap 'rm -f $tmp' EXIT
-    count="$(listimages "$abs_target" | grep -a -m 1 -ZznF "$abs_target" | cut -d: -f1)"
-
-    if [ -n "$count" ]; then
-        if [ "$GUI" -ne 0 ]; then
-            xargs -0 nohup "$1" -n "$count" -- < "$tmp"
-        else
-            xargs -0 "$1" -n "$count" -- < "$tmp"
-        fi
-    else
-        shift
-        "$1" -- "$@" # fallback
-    fi
-}
-
 handle_multimedia() {
     mimetype="${1}"
     case "${mimetype}" in
         ## Image
         image/*)
-                if type mvi >/dev/null 2>&1; then
-                      mvi  "${FPATH}" >/dev/null 2>&1 &
-                    exit 0
-                fi
+            if type mvi >/dev/null 2>&1; then
+                mvi  "${FPATH}" >/dev/null 2>&1 &
+                return
+            fi
             exit 1;;
 
         ## PDF
         application/pdf)
             handle_pdf
-            exit 1;;
+            return;;
 
         ## Audio
         audio/*)
             handle_av
-            exit 1;;
+            return;;
 
         ## Video
         video/*)
             handle_av
-            exit 1;;
+            return;;
     esac
 }
 
@@ -117,7 +91,7 @@ handle_mime() {
         ## Text
         text/* | */xml)
             "$EDITOR" "${FPATH}"
-            exit 0;;
+            return;;
     esac
 }
 
@@ -125,7 +99,7 @@ handle_fallback() {
     if [ "$GUI" -ne 0 ]; then
         if type xdg-open >/dev/null 2>&1; then
             nohup xdg-open "${FPATH}" >/dev/null 2>&1 &
-            exit 0
+            return
         fi
     fi
 
@@ -137,5 +111,3 @@ MIMETYPE="$( file -bL --mime-type -- "${FPATH}" )"
 handle_multimedia "${MIMETYPE}"
 handle_extension
 handle_fallback
-
-exit 1
