@@ -29,7 +29,7 @@ $ws6 6  Grap
 $ws7 7  Othe
 }
 
-#xwayland disable
+xwayland disable
 swaybg_command -
 
 default_border pixel 2
@@ -148,9 +148,9 @@ $mod+Shift+8 move container to workspace number 8
 $mod+Shift+9 move container to workspace number 9
 $mod+Shift+0 move container to workspace number 10
 
-XF86AudioRaiseVolume exec amixer sset Master 5%+ && $r_vol
-XF86AudioLowerVolume exec amixer sset Master 5%- && $r_vol
-XF86AudioMute exec amixer sset Master toggle  && $r_vol
+XF86AudioRaiseVolume exec amixer sset Master 5%+ ; $r_vol
+XF86AudioLowerVolume exec amixer sset Master 5%- ; $r_vol
+XF86AudioMute exec amixer sset Master toggle  ;  $r_vol
 
 Control+XF86AudioMute exec amixer -q sset Capture toggle 
 Control+XF86AudioRaiseVolume exec amixer -q sset Capture 5%+
@@ -192,7 +192,6 @@ pointer_accel 1
 
 input 1:1:AT_Translated_Set_2_keyboard  {
 xkb_layout "us,np"
-xkb_numlock enable
 xkb_options caps:backspace
 }
 
