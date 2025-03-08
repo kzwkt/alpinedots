@@ -1,9 +1,0 @@
-#!/bin/sh
-
-params="root=UUID=xxx-xxx-xxx  modules=ext4 quiet loglevel=3 initrd=\initramfs-lts"
-
-efibootmgr --create --label "Alpine Linux" \
-  --disk /dev/nvme0n1 --part 1 \
-  --loader /vmlinuz-lts \
-  --unicode "${params}" \
-  --verbose
