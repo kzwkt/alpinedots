@@ -1,1 +1,4 @@
-not working scripts  in alpine maybe lua or what ?
+lrc plugin need curl
+
+
+doas apk add curl
