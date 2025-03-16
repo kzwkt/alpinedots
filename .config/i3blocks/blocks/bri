@@ -1,12 +1,14 @@
 #!/bin/sh
 case $BLOCK_BUTTON in
-	4) brightnessctl s 1%+ >> /dev/null;;
-	5) brightnessctl s 1%- >> /dev/null;;
+	4) brightnessctl -e set 5%+ >> /dev/null;;
+	5) brightnessctl -e set 5%- >> /dev/null;;
+	6) foot nano "$0" ;;
 	esac
-BNESS="$(brightnessctl get)"
-MAX="$(brightnessctl max)"
+bd="/sys/class/backlight/intel_backlight"
+BNESS="$(cat $bd/brightness)"
+MAX="$(cat $bd/max_brightness)"
 PERC="$((BNESS*100/MAX))"
 BLIGHT=${PERC%.*}
-ICON=""	
+ICON=""
 
 echo $ICON $BLIGHT
