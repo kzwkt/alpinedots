@@ -7,4 +7,4 @@ fi
 
 PATH="$HOME/.bin:$PATH"
 
-[ -z "$WAYLAND_DISPLAY" ] && tty="/dev/tty1" && sway
+[ -z "$WAYLAND_DISPLAY" ] && tty="/dev/tty1" && dbus-run-session sway
