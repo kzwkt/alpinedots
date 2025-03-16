@@ -1,5 +1,9 @@
 command=/home/kai/.config/i3blocks/blocks/$BLOCK_NAME
 
+[bri]
+interval=once
+signal=2
+
 [vol]
 interval=once
 signal=1
@@ -9,4 +13,5 @@ interval=5
 
 [clock]
 interval=60
+
 
