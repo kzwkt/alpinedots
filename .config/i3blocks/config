@@ -1,4 +1,4 @@
-command=/home/kai/.config/i3blocks/blocks/$BLOCK_NAME
+command=/home/kai/.config/i3blocks/$BLOCK_NAME
 
 [bri]
 interval=once
