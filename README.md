@@ -36,8 +36,10 @@ echo "nameserver 1.1.1.1"  > /etc/resolv.conf
  enable community repos(c)
  
  mirror[1]
+```
 
 apk add alsa-utils brightnessctl  cfdisk doas dosfstools e2fsprogs file firefox font-awesome font-dejavu font-dejavu-sans-mono-nerd foot grim gsettings-desktop-schemas htop i3blocks intel-media-driver iwd jq libudev-zero  mesa-dri-gallium mingetty mpv nano nnn  openresolv seatd slurp socat sway  wl-clipboard wofi wtype zathura-pdf-mupdf
+```
 
 optional : coz of diffrent  requirement
 
@@ -46,8 +48,29 @@ optional : coz of diffrent  requirement
  setup-devd
  
  [mdev]
+```
 
 rc-update del hwdrivers
+
+rc-update add iwd boot
+rc-update add seatd boot
+
+adduser k -s /bin/ash
+passwd
+
+addgroup k seat
+addgroup k video
+addgroup k audio
+addgroup k wheel
+```
+
+if chroot distro has bash/dash change shell of custom user in /etc/passwd 
+
+su k 
+
+
+
+
 
 
  
