@@ -4,9 +4,9 @@
 ::sysinit:/sbin/openrc -q   boot
 ::wait:/sbin/openrc -q  default
 
+::sysinit:/bin/chown k:k /sys/class/backlight/intel_backlight/brightness
 tty1::respawn:/usr/sbin/mingetty --autologin k --noclear --nonewline --noissue --nohostname  tty1
 tty2::respawn:/sbin/getty 38400 tty2
 
 ::ctrlaltdel:/sbin/reboot
 ::shutdown:/sbin/openrc shutdown
-
