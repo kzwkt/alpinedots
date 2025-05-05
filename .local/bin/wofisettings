@@ -1,0 +1,5 @@
+#!/bin/sh
+editor='foot nano'
+file=$(wofi -d < ~/.config/wofisettings)
+[ -z "$file" ] && exit
+exec $editor $file
