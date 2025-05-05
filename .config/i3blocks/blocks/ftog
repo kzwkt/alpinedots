@@ -1,6 +1,0 @@
-#!/bin/sh
-case $BLOCK_BUTTON in
-        1) swaymsg floating toggle >> /dev/null ;;
-         esac
-
-echo " "
