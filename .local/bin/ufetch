@@ -8,20 +8,9 @@ packages="$(apk info | wc -l)"
 shell="$(basename "${SHELL}")"
 
 ## UI DETECTION
-ui='unknown'
-uitype='UI'
+uitype="UI"
+ui="${XDG_CURRENT_DESKTOP:-${DESKTOP_SESSION:-${XDG_SESSION_TYPE:-unknown}}}"
 
-if [ -n "${XDG_CURRENT_DESKTOP}" ]; then
-	ui="${XDG_CURRENT_DESKTOP}"
-	uitype='DE'
-elif [ -n "${DESKTOP_SESSION}" ]; then
-	ui="${DESKTOP_SESSION}"
-	uitype='DE'
-elif [ -n "${XDG_SESSION_TYPE}" ]; then
-	ui="${XDG_SESSION_TYPE}"
-fi
-
-ui="$(basename "${ui}")"
 
 ## DEFINE COLORS
 
