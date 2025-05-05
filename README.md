@@ -50,10 +50,13 @@ optional : coz of diffrent  requirement
  [mdev]
 ```
 
+rc-update add fsck sysinit
 rc-update del hwdrivers
-
 rc-update add iwd boot
 rc-update add seatd boot
+rc-update add killprocs shutdown
+rc-update add mdev sysinit
+rc-update add mount-ro shutdown
 
 adduser k -s /bin/ash
 passwd
