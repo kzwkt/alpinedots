@@ -1,7 +1,7 @@
 #!/bin/sh
 case $BLOCK_BUTTON in
-	1) foot alsamixer  ;;
-	 2) amixer sset Master toggle  >>/dev/null ;;
+	 2) foot alsamixer  ;;
+	 1) amixer sset Master toggle  >>/dev/null ;;
 	 4) amixer sset Master 5%+ >>/dev/null ;;
 	 5) amixer sset Master 5%- >>/dev/null ;;
 	 6) foot nano "$0" ;;

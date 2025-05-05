@@ -1,0 +1,8 @@
+#!/bin/sh
+case $BLOCK_BUTTON in
+        1) swaymsg move scratchpad >> /dev/null ;;
+        3) swaymsg scratchpad show >> /dev/null ;;
+	6) foot nano "$0" ;;
+         esac
+
+echo "  "

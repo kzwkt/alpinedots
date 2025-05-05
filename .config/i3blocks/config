@@ -1,5 +1,9 @@
 command=~/.config/i3blocks/$BLOCK_NAME
 
+[kb]
+interval=once
+signal=3
+
 [bri]
 interval=once
 signal=2
@@ -14,4 +18,11 @@ interval=5
 [clock]
 interval=60
 
+[min]
+interval=once
 
+[max]
+interval=once
+
+[x]
+interval=once

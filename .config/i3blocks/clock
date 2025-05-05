@@ -1,0 +1,5 @@
+#!/bin/sh
+case $BLOCK_BUTTON in
+	6) foot  nano "$0" ;;
+esac
+date "+%Y %b %d (%a) %I:%M%p"
