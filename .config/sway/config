@@ -16,7 +16,7 @@ $r_kb exec pkill -RTMIN+3 i3blocks
 
 $term foot
 $browser firefox
-$editor sublime_text
+$editor foot nano
 $menu wofi --show drun -I
 $pctl playerctl.sh
 $mode_system System: (e) exit, (r) reboot, (o) power-off
@@ -39,11 +39,10 @@ $downmic exec amixer -q sset Capture 5%-
 $togmic exec amixer -q sset Capture toggle
 }
 
-#seat seat0 xcursor_theme  rad
+seat seat0 xcursor_theme  Adwaita
 #output *  bg "$wallpaper" fill
 xwayland disable
 swaybg_command -
-
 
 
 default_border pixel 2
@@ -215,7 +214,6 @@ xkb_options caps:backspace
 }
 
 bar {
-font pango:JetBrainsMonoNL Nerd Font Mono,JetBrainsMonoNL NFM:style=Regular 12
 position top
 status_command i3blocks
 }
