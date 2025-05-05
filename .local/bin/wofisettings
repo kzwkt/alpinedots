@@ -1,5 +1,17 @@
 #!/bin/sh
 editor='foot nano'
-file=$(wofi -d < ~/.config/wofisettings)
+
+file=$(wofi -d <<EOF
+$HOME/.bashrc
+$HOME/.profile
+$HOME/.local/bin/nuke
+$HOME/.local/bin/wofisettings
+$HOME/.config/foot/foot.ini
+$HOME/.config/i3blocks/config
+$HOME/.config/sway/config
+$HOME/.config/zathura/zathurarc
+EOF
+)
+
 [ -z "$file" ] && exit
-exec $editor $file
+exec $editor "$file"
