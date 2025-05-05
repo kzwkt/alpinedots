@@ -1,28 +1,29 @@
-
-    exec bwrap \
-     --ro-bind /usr/share /usr/share/ \
-     --ro-bind /usr/lib /usr/lib \
-     --ro-bind /lib/   /lib/ \
-     --proc /proc \
-     --dev /dev \
-     --dev-bind /dev/snd /dev/snd \
-     --dev-bind /dev/dri /dev/dri \
-     --ro-bind /sys/dev/char /sys/dev/char \
-     --ro-bind /sys/devices/pci0000:00 /sys/devices/pci0000:00 \
-     --ro-bind /etc/fonts   /etc/fonts \
-     --ro-bind /etc/pulse   /etc/pulse \
-     --ro-bind /etc/group   /etc/group \
-     --ro-bind /etc/resolv.conf   /etc/resolv.conf \
-     --bind /tmp/ /tmp/  \
-     --bind ~/.mozilla ~/.mozilla \
-     --bind ~/.cache/mozilla ~/.cache/mozilla \
-     --bind ~/Downloads ~/Downloads \
-     --chdir ~/ \
-     --unsetenv DBUS_SESSION_BUS_ADDRESS \
-     --setenv MOZ_ENABLE_WAYLAND 1 \
-     --unshare-user-try \
-     --unshare-pid \
-     --unshare-uts \
-     --unshare-cgroup-try \
-     --new-session \
-     /usr/lib/firefox/firefox
+#!/bin/sh
+set -u
+exec bwrap \
+--unshare-all --share-net --die-with-parent --new-session \
+--setenv GTK_USE_PORTAL 0 \
+--ro-bind /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1 \
+--proc /proc \
+--dev /dev \
+--dev-bind /dev/snd /dev/snd \
+--dev-bind /dev/dri /dev/dri \
+--ro-bind /sys/dev/char /sys/dev/char \
+--ro-bind /sys/devices/pci0000:00 /sys/devices/pci0000:00 \
+--ro-bind /etc/fonts   /etc/fonts \
+--ro-bind /etc/group   /etc/group \
+--ro-bind /etc/resolv.conf   /etc/resolv.conf \
+--ro-bind /usr/lib /usr/lib \
+--ro-bind /usr/share/alsa /usr/share/alsa \
+--ro-bind /usr/share/X11/xkb/ /usr/share/X11/xkb/ \
+--ro-bind /usr/share/fontconfig/ /usr/share/fontconfig/ \
+--ro-bind /usr/share/fonts/ /usr/share/fonts/ \
+--ro-bind /usr/share/glib-2.0/ /usr/share/glib-2.0/ \
+--ro-bind /usr/share/icons/ /usr/share/icons/ \
+--ro-bind /usr/share/mime/ /usr/share/mime/ \
+--bind /tmp/ /tmp/  \
+--bind-try ~/.mozilla ~/.mozilla \
+--bind-try ~/.cache/mozilla ~/.cache/mozilla \
+--bind-try ~/Downloads ~/Downloads \
+--ro-bind-try ~/.local/share/fonts/ ~/.local/share/fonts/ \
+/usr/lib/firefox/firefox
