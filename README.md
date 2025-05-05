@@ -1,10 +1,8 @@
 # alpinedots
 
-apk  add  font-cantarell
+nerd font from
 
-fire code from 
-
-https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/FiraCode
+https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts
 
 
  https://gitlab.alpinelinux.org/alpine/apk-tools/-/releases
