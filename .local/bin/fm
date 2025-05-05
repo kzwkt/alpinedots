@@ -1,0 +1,11 @@
+#!/bin/sh
+ed=nano
+NNN_BMS='c:~/.config;;D:~/Downloads/'
+export NNN_PLUG='p:preview-tui;d:dragdrop'
+export NNN_OPTS="dx"
+export NNN_OPENER=nuke
+export NNN_FIFO=/tmp/nnn.fifo
+export NNN_TERMINAL=foot
+export EDITOR=$ed
+export VISUAL=$ed
+nnn "$@"
