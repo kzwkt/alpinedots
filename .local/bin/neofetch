@@ -1,0 +1,58 @@
+user="${USER}"
+host="$(hostname)"
+os="$(. /etc/os-release 2>/dev/null && printf %s "$PRETTY_NAME")"
+kernel="$(uname -sr)"
+uptime="$(uptime | awk -F'( |,|:)+' '{print $6 "h " $7 "m"}')"
+packages="$(command -v apk >/dev/null && apk info | wc -l)"
+shell="$(basename "$SHELL")"
+de="sway"
+theme="Adwaita[GTK2], Adwaita[GTK3]"
+resolution="1920x1080"
+terminal="${TERM:-unknown}"
+cpu="$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ //')"
+memory="$(free -m | awk '/Mem:/{printf "%dMiB / %dMiB", $3, $2}')"
+
+## DEFINE COLORS
+
+bold='\033[1m'
+black='\033[0;30m'
+red='\033[0;31m'
+green='\033[0;32m'
+yellow='\033[0;33m'
+blue='\033[0;34m'
+magenta='\033[0;35m'
+cyan='\033[0;36m'
+white='\033[0;37m'
+reset='\033[0m'
+
+# you can change these
+lc="${reset}${bold}${magenta}"         # labels
+nc="${reset}${bold}${blue}"         # user and hostname
+ic="${reset}"                       # info
+c0="${reset}${blue}"                # first color
+
+# Output
+printf "
+${c0}       .hddddddddddddddddddddddh.       	${nc}${user}${ic}@${nc}${host}${reset}
+${c0}      :dddddddddddddddddddddddddd:     	       ----------------------------------
+${c0}     /dddddddddddddddddddddddddddd/      	${lc}OS:        ${ic}${os}${reset}
+${c0}    +dddddddddddddddddddddddddddddd+     	${lc}Host:      ${ic}${host}${reset} 
+${c0}  \`sdddddddddddddddddddddddddddddddds\`   	${lc}Kernel:    ${ic}${kernel}${reset} 
+${c0} \`ydddddddddddd++hdddddddddddddddddddy\`  	${lc}Uptime:    ${ic}${uptime}${reset}
+${c0}.hddddddddddd+   \`+ddddh:-sdddddddddddh. 	${lc}Packages:  ${ic}${packages}${reset} 
+${c0}hdddddddddd+      \`+y:     .sddddddddddh 	${lc}Shell:     ${ic}${shell}${reset}
+${c0}ddddddddh+   \`//\`   \`.\`      -sddddddddd 	${lc}Resolution:${ic}${resolution}${reset}
+${c0}ddddddh+   \`/hddh/\`   \`:s-     -sddddddd 	${lc}DE:        ${ic}${de}${reset}
+${c0}ddddh+   \`/+//dddddh/\`   \`+s-    -sddddd 	${lc}Theme:     ${ic}${theme}${reset}
+${c0}ddd+   \`/o\` :dddddddh/\`   \`oy-     .yddd 	${lc}Icons:     ${ic}${theme}${reset}
+${c0}hdddyo+ohddyosdddddddddho+oydddy++ohdddh 	${lc}Terminal:  ${ic}${terminal}${reset}
+${c0}.hddddddddddddddddddddddddddddddddddddh. 	${lc}Term font: ${ic}monospace${reset}
+${c0} \`yddddddddddddddddddddddddddddddddddy\`  	${lc}CPU:       ${ic}${cpu}${reset}
+${c0}  \`sdddddddddddddddddddddddddddddddds\`   	${lc}MEM:       ${ic}${memory}${reset}
+${c0}    +dddddddddddddddddddddddddddddd+
+${c0}     /dddddddddddddddddddddddddddd/
+${c0}      :dddddddddddddddddddddddddd:
+${c0}       .hddddddddddddddddddddddh. 
+"
+
+printf "${reset}"
