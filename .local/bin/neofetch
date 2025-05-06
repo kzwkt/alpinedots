@@ -7,6 +7,7 @@ packages="$(command -v apk >/dev/null && apk info | wc -l)"
 shell="$(basename "$SHELL")"
 de="sway"
 theme="Adwaita[GTK2], Adwaita[GTK3]"
+icon="Adwaita"
 resolution="1920x1080"
 terminal="${TERM:-unknown}"
 cpu="$(grep -m1 'model name' /proc/cpuinfo | cut -d: -f2 | sed 's/^ //')"
@@ -44,7 +45,7 @@ ${c0}hdddddddddd+      \`+y:     .sddddddddddh 	${lc}Shell:     ${ic}${shell}${r
 ${c0}ddddddddh+   \`//\`   \`.\`      -sddddddddd 	${lc}Resolution:${ic}${resolution}${reset}
 ${c0}ddddddh+   \`/hddh/\`   \`:s-     -sddddddd 	${lc}DE:        ${ic}${de}${reset}
 ${c0}ddddh+   \`/+//dddddh/\`   \`+s-    -sddddd 	${lc}Theme:     ${ic}${theme}${reset}
-${c0}ddd+   \`/o\` :dddddddh/\`   \`oy-     .yddd 	${lc}Icons:     ${ic}${theme}${reset}
+${c0}ddd+   \`/o\` :dddddddh/\`   \`oy-     .yddd 	${lc}Icons:     ${ic}${icon}${reset}
 ${c0}hdddyo+ohddyosdddddddddho+oydddy++ohdddh 	${lc}Terminal:  ${ic}${terminal}${reset}
 ${c0}.hddddddddddddddddddddddddddddddddddddh. 	${lc}Term font: ${ic}monospace${reset}
 ${c0} \`yddddddddddddddddddddddddddddddddddy\`  	${lc}CPU:       ${ic}${cpu}${reset}
