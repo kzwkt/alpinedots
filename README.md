@@ -49,7 +49,7 @@ echo "nameserver 1.1.1.1"  > /etc/resolv.conf
  mirror[1]
 ```
 
-apk add alpine-base alsa-utils brightnessctl bubblewrap busybox-mdev-openrc cfdisk doas dosfstools e2fsprogs file firefox font-awesome font-dejavu font-noto-emoji foot grim gsettings-desktop-schemas htop i3blocks intel-media-driver iwd jq libudev-zero  mesa-dri-gallium mingetty mpv nano nnn oath-toolkit-oathtool openresolv seatd slurp socat sway  wl-clipboard wofi wtype zathura-pdf-mupdf 
+apk add alpine-base alsa-utils brightnessctl bubblewrap busybox-mdev-openrc cfdisk doas dosfstools e2fsprogs file firefox font-awesome font-dejavu font-noto-emoji foot grim gsettings-desktop-schemas htop i3blocks intel-media-driver iwd jq libudev-zero  mesa-dri-gallium mingetty mpv nano nnn oath-toolkit-oathtool openresolv seatd slurp socat sway  wl-clipboard wofi wtype zathura-pdf-mupdf dragon-drop
 ```
 
 optional : coz of diffrent  requirement
