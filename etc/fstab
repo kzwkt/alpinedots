@@ -1,0 +1,2 @@
+UUID=555E-3F35 /boot vfat defaults 0 0 
+UUID=ec0e7176-d39a-4263-aee4-84a01c48fd70  /home ext4 defaults 0  1
