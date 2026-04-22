@@ -14,7 +14,7 @@ mount /dev/sda2 /mnt
 
 ### 2. Base Installation
 ```bash
-sudo ./apk.static -X "[http://dl-cdn.alpinelinux.org/alpine/latest-stable/main](http://dl-cdn.alpinelinux.org/alpine/latest-stable/main)" \
+sudo ./apk.static -X http://dl-cdn.alpinelinux.org/alpine/latest-stable/main \
 -U --allow-untrusted --root /mnt --initdb add alpine-base
 ```
 
