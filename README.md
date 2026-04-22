@@ -6,6 +6,7 @@ https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts
 
 https://gitlab.alpinelinux.org/alpine/apk-tools/-/releases
 
+```
 chmod +x apk.static
 
 sudo cfdik /dev/sda
@@ -15,6 +16,7 @@ mkfs.ext4 /dev/sda2
 mount /dev/sda2 /mnt
 
 sudo ./apk.static  -X "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" -U --allow-untrusted --root /mnt --initdb add alpine-base
+```
 
 nano chroot.sh
 ```
@@ -53,20 +55,26 @@ apk add alpine-base alsa-utils brightnessctl bubblewrap busybox-mdev-openrc cfdi
 
 
 # setup boot loader 
+```
 apk add systemd-boot efibootmgr
 
 mount ESP (EFI system partition) to /boot for easy kernel+initramfs update 
 mkdir -p /boot/EFI/systemd/
 cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/
+```
 
 mkdir -p /boot/loader/entries/alpine.conf
+```
 title alpine
 linux /vmlinuz-lts
 initrd /initramfs-lts
 options root=/dev/sda5 modules=sd-mod,ext4 quiet
+```
 
+```
 apk add linux-firmware-none     # to avoid unnecessary linux-firmware-*** package
 apk add linux-lts 
+```
 
 optional : coz of diffrent  requirement
 
