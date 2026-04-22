@@ -42,25 +42,39 @@ unshare chroot?
 ```
 unshare --mount --pid --fork --user --map-root-user --mount-proc \
   bash -c '
+```
+```
     mount --rbind /dev /mnt/dev && mount --make-rslave /mnt/dev
+```
+```
     mount --rbind /dev/pts /mnt/dev/pts && mount --make-rslave /mnt/dev/pts
+```
+```
     mount --rbind /proc /mnt/proc && mount --make-rslave /mnt/proc
+```
+```
     mount --rbind /sys /mnt/sys && mount --make-rslave /mnt/sys
+```
 
+```
 chroot /mnt /bin/sh
+```
   '
 ```
 sudo /bin/sh ./chroot.sh
+```
 
+```
 echo "nameserver 1.1.1.1"  > /etc/resolv.conf
+```
 
+```
  setup-apkrepos
-
+```
  enable community repos(c)
  
  mirror[1]
 ```
-
 apk add alpine-base alsa-utils brightnessctl bubblewrap busybox-mdev-openrc cfdisk doas dosfstools e2fsprogs file firefox font-awesome font-dejavu font-noto-emoji foot grim gsettings-desktop-schemas htop i3blocks intel-media-driver iwd jq libudev-zero  mesa-dri-gallium mingetty mpv nano nnn oath-toolkit-oathtool openresolv seatd slurp socat sway  wl-clipboard wofi wtype zathura-pdf-mupdf dragon-drop
 ```
 
@@ -68,12 +82,17 @@ apk add alpine-base alsa-utils brightnessctl bubblewrap busybox-mdev-openrc cfdi
 # setup boot loader 
 ```
 apk add systemd-boot efibootmgr
-
+```
+```
 mount ESP (EFI system partition) to /boot for easy kernel+initramfs update 
+```
+```
 mkdir -p /boot/EFI/systemd/
+```
+```
 cp /usr/lib/systemd/boot/efi/systemd-bootx64.efi /boot/EFI/systemd/
 ```
-
+```
 mkdir -p /boot/loader/entries/alpine.conf
 ```
 title alpine
@@ -84,19 +103,30 @@ options root=/dev/sda5 modules=sd-mod,ext4 quiet
 
 ```
 apk add linux-firmware-none     # to avoid unnecessary linux-firmware-*** package
+```
+
+```
 apk add linux-lts 
 ```
 
 optional : coz of diffrent  requirement
 
 inspiron 3501 
+```
 apk add linux-firmware-ath10k linux-firmware-i915 bubblewrap linux-firmware-none 
+```
 
 Inspiron 5559
+```
 apk add linux-firmware-amd linux-firmware-amdgpu linux-firmware-radeon linux-firmware-intel intel-media-driver linux-firmware-intel
+```
 
+```
 apk add ntfs-3g wireless-regdb  
- setup-devd 
+ ```
+```
+setup-devd 
+```
  [mdev]
  with mdev you need libudev-zero else no x/wayland login
 ```
