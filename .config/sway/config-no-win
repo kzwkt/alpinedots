@@ -1,0 +1,193 @@
+set {
+    $mod Mod1
+
+    $r_vol exec pkill -RTMIN+1 i3blocks
+    $r_bl exec pkill -RTMIN+2 i3blocks
+    $r_kb exec pkill -RTMIN+3 i3blocks
+
+    $term foot
+    $browser firefox
+    $editor foot nano
+    $menu wofi --show drun -I
+    $pctl playerctl.sh
+    $mode_system System: (e) exit, (r) reboot, (o) power-off
+
+    $ws1 1  Term
+    $ws2 2  Webb
+    $ws3 3  File
+    $ws4 4  Code
+    $ws5 5  Medi
+    $ws6 6  Grap
+    $ws7 7  Othe
+
+    $upvol exec amixer sset Master 5%+ ; $r_vol
+    $downvol exec amixer sset Master 5%- ; $r_vol
+    $togvol exec amixer sset Master toggle ; $r_vol
+    $upbl exec brightnessctl -e set 1%+ ; $r_bl 
+    $downbl exec brightnessctl -e set 1%- ; $r_bl 
+    $upmic exec amixer -q sset Capture 5%+
+    $downmic exec amixer -q sset Capture 5%-
+    $togmic exec amixer -q sset Capture toggle
+}
+
+seat seat0 xcursor_theme Adwaita
+xwayland disable
+swaybg_command -
+
+default_border pixel 2
+floating_modifier $mod normal
+focus_follows_mouse no 
+default_floating_border normal
+workspace_auto_back_and_forth yes
+floating_maximum_size 1920 x 1080
+smart_borders on 
+smart_gaps on
+
+client.focused #ff0000 #ff0000 #ffffff #4477ff #ff0000
+
+# Window rules
+for_window {
+    [app_id=.*] focus 
+    [app_id= mpv] floating enable 
+    [app_id=org.pwmt.zathura] layout tabbed
+    [title = "Picture-in-Picture"] sticky enable ; floating enable;
+    [title= "mvi"] floating disable ;
+    [shell="xwayland"] title_format "[XWayland] %title"
+}
+
+assign {
+    [app_id="foot"] $ws1
+    [app_id="$browser"] $ws2
+    [app_id="fm"] $ws3
+    [app_id=geany|l3afpad|sublime_text] $ws4
+    [app_id=org.pwmt.zathura] $ws6
+    [app_id=xdm-app] $ws7
+}
+
+# Keyboard bindings (Explicit and unique, zero variable overrides)
+bindsym --to-code {
+    $mod+a focus parent
+    $mod+b splith
+    $mod+Shift+b border toggle
+    $mod+d exec $menu
+    $mod+e exec foot -a fm fm
+    $mod+Shift+e exec swaynag -t warning -m 'Bye Bye' -B 'Yes' 'swaymsg exit'
+    $mod+f fullscreen
+    $mod+i exec wofisettings
+    $mod+q kill
+    $mod+Shift+r reload
+    $mod+s sticky toggle
+    $mod+v splitv
+    $mod+w exec $browser
+    $mod+x exec wmoji
+    $mod+Escape mode "$mode_system"
+    $mod+minus scratchpad show
+    $mod+Shift+minus move scratchpad
+    $mod+z exec $term
+    $mod+Shift+z exec foot -a float
+    $mod+slash exec wmoji all_emojis.txt
+    $mod+Shift+Space floating toggle
+    $mod+Space input 1:1:AT_Translated_Set_2_keyboard xkb_switch_layout next ; $r_kb
+
+    $mod+Tab workspace next 
+
+    # --- 1. FOCUS NAVIGATION ($mod + h/j/k/l) ---
+    $mod+h focus left
+    $mod+j focus down
+    $mod+k focus up
+    $mod+l focus right
+
+    # --- 2. MOVE WINDOWS ($mod + Shift + h/j/k/l) ---
+    $mod+Shift+h move left
+    $mod+Shift+j move down
+    $mod+Shift+k move up
+    $mod+Shift+l move right
+
+    # --- 3. RESIZE WINDOWS (Control + $mod + h/j/k/l) ---
+    Control+$mod+h resize shrink width 10px
+    Control+$mod+j resize grow height 10px
+    Control+$mod+k resize shrink height 10px
+    Control+$mod+l resize grow width 10px
+
+    # Workspaces 1-7
+    $mod+1 workspace $ws1
+    $mod+2 workspace $ws2
+    $mod+3 workspace $ws3
+    $mod+4 workspace $ws4
+    $mod+5 workspace $ws5
+    $mod+6 workspace $ws6
+    $mod+7 workspace $ws7
+    $mod+8 workspace number 8
+    $mod+9 workspace number 9
+    $mod+0 workspace number 10
+
+    # Move container to workspaces
+    $mod+Shift+1 move container to workspace $ws1
+    $mod+Shift+2 move container to workspace $ws2
+    $mod+Shift+3 move container to workspace $ws3
+    $mod+Shift+4 move container to workspace $ws4
+    $mod+Shift+5 move container to workspace $ws5
+    $mod+Shift+6 move container to workspace $ws6
+    $mod+Shift+7 move container to workspace $ws7
+    $mod+Shift+8 move container to workspace number 8
+    $mod+Shift+9 move container to workspace number 9
+    $mod+Shift+0 move container to workspace number 10
+
+    # Multimedia and Function keys
+
+    XF86AudioRaiseVolume $upvol 
+    XF86AudioLowerVolume $downvol 
+    XF86AudioMute $togvol
+    XF86AudioPlay exec $pctl play-pause
+    Control+XF86AudioMute $togmic
+    Control+XF86AudioRaiseVolume $upmic
+    Control+XF86AudioLowerVolume $downmic
+    XF86MonBrightnessDown $downbl
+    XF86MonBrightnessUp $upbl
+
+    Alt+period exec $pctl next
+    Alt+comma exec $pctl previous
+    Alt+m exec $pctl play-pause
+    $mod+p exec wshot
+    XF86PowerOff output eDP-1 dpms toggle
+}
+
+# Resize floating windows with mouse scroll:
+bindsym --whole-window --border {
+    $mod+button4 resize shrink height 5 px or 5 ppt
+    $mod+button5 resize grow height 5 px or 5 ppt
+    $mod+button6 resize shrink width 5 px or 5 ppt
+    $mod+button7 resize grow width 5 px or 5 ppt
+} 
+
+mode "$mode_system" {
+    bindsym e exit , mode "default"
+    bindsym r exec doas /sbin/reboot , mode "default"
+    bindsym o exec doas /sbin/poweroff , mode "default"
+    bindsym Escape mode "default"
+}
+
+input type:touchpad {
+    dwt enabled
+    tap enabled
+    middle_emulation enabled
+    pointer_accel 1
+}
+
+input 1:1:AT_Translated_Set_2_keyboard {
+    xkb_layout "us,np"
+    xkb_options caps:backspace
+}
+
+bar {
+    position top
+    status_command i3blocks
+}
+
+bindgesture {
+    swipe:3:up floating toggle
+    swipe:3:down kill
+    swipe:3:left move scratchpad
+    swipe:3:right scratchpad show
+    hold:3 exec $menu
+}
