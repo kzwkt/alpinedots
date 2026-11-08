@@ -1,0 +1,29 @@
+# /etc/inittab
+
+::sysinit:/bin/mkdir -p /run/dbus
+::sysinit:/bin/mkdir -p /dev/pts
+::sysinit:/bin/mkdir -p /dev/shm
+
+::sysinit:/bin/mount -t proc proc /proc
+::sysinit:/bin/mount -t sysfs sysfs /sys
+::sysinit:/bin/mount -t tmpfs -o nosuid,nodev,noexec tmpfs /dev/shm
+::sysinit:/bin/mount -t devpts -o gid=5,mode=620 devpts /dev/pts
+::sysinit:/sbin/ip link set dev lo up
+::sysinit:/sbin/mdev -s
+
+::sysinit:/bin/chown k:k /sys/class/backlight/intel_backlight/brightness
+::sysinit:/usr/bin/dbus-uuidgen --ensure
+::respawn:/usr/bin/dbus-daemon --system --nofork --nopidfile >/dev/null 2>&1
+::respawn:/usr/libexec/iwd >/dev/null 2>&1
+::respawn:/usr/bin/seatd -g seat >/dev/null 2>&1
+
+tty1::respawn:/usr/sbin/mingetty --autologin k --noclear --nonewline --noissue --nohostname  tty1
+tty2::respawn:/sbin/getty 38400 tty2 linux
+
+::ctrlaltdel:/sbin/reboot
+::shutdown:/usr/sbin/killall5 -15
+::shutdown:/bin/sleep 1
+::shutdown:/usr/sbin/killall5 -9
+::shutdown:/bin/sync
+::shutdown:/bin/umount -a -r
+#::shutdown:/sbin/swapoff -a
