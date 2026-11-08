@@ -1,0 +1,17 @@
+null            0:0     666
+zero            0:0     666
+random          0:0     666
+urandom         0:0     444
+hw_random	0:0 600 =hwrng
+
+console		0:5	600
+ptmx            0:5     666
+
+tty		root:tty 0666
+tty[0-9]	root:root 0600
+tty[0-9][0-9]+	root:tty 0660
+
+
+dri/.*          0:video 660
+snd/.*          0:audio 660
+video[0-1]+       0:video       0660
